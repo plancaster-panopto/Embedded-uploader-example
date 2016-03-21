@@ -41,9 +41,9 @@
 
                 //Called when "Insert" is clicked. Creates HTML for embedding each selected video into the editor
                 if (message.cmd === 'deliveryList') {
-                        var idString = "IDs: <br/><ul>";
+                        var idString = "<ul>";
                         var embedString = "";
-                        var viewersString = "Viewer URLS: <br/><ul>"
+                        var viewersString = "<ul>";
                      //The message will contain a list of the public ids of each selected session.
                      $.each(message.ids, function (key, value) {
                         //Add id to list of ids
@@ -53,7 +53,7 @@
                         embedString += "<object data=\"" + servername + "/Panopto/Pages/Embed.aspx?id=" + value + "&v=1\" width=\"450\" height=\"300\" frameborder=\"0\"></object><br>";
 
                         //Create a viewer url for the session and append to list of session viewer urls.
-                        viewersString += "<li><a href = \"" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "\">" + value + "</a></li>";
+                        viewersString += "<li><a href = \"" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "\">" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "</a></li>";
                     });
                     idString += "</ul>";
                     viewersString += "</ul>";
