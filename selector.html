@@ -42,25 +42,39 @@
                 //Called when "Insert" is clicked. Creates HTML for embedding each selected video into the editor
                 if (message.cmd === 'deliveryList') {
                         var idString = "<ul>";
-                        var embedString = "";
                         var viewersString = "<ul>";
+                        var embedString = "";
                      //The message will contain a list of the public ids of each selected session.
                      $.each(message.ids, function (key, value) {
                         //Add id to list of ids
                         idString += "<li>" + value + "</li>";
 
                         //Create an video embed as an object or iframe using the servername and the session's id and append to the string containing the embed tags for all selected sessions.
-                        embedString += "<object data=\"" + servername + "/Panopto/Pages/Embed.aspx?id=" + value + "&v=1\" width=\"450\" height=\"300\" frameborder=\"0\"></object><br>";
+                        embedString += "<iframe src=\"" + servername + "/Panopto/Pages/Embed.aspx?id=" + value + "&v=1\" width=\"450\" height=\"300\" frameborder=\"0\"></iframe><br>";
 
                         //Create a viewer url for the session and append to list of session viewer urls.
                         viewersString += "<li><a href = \"" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "\">" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "</a></li>";
                     });
+
+                    //Close the list of session ids
                     idString += "</ul>";
+
+                    //Close the list of viewer urls.
                     viewersString += "</ul>";
+
+                    //Add the list of ids to the calling page's "idlist" div
                     window.opener.$("#idlist").html(idString);
+
+                    //Add the list of session viewer urls to the calling page's "urllist" div
                     window.opener.$("#urllist").html(viewersString);
+
+                    //Add a text area with the raw embed code for the selected sessions to the "embedtext" div of the calling page
                     window.opener.$("#embedtext").html("<textarea rows=\"15\" cols=\"30\">" + embedString + "</textarea>");
+
+                    //Insert the embedded sessions into the "embedPreview" div on the calling page
                     window.opener.$("#embedPreview").html(embedString);
+
+                    //Close the embedded uploader window.
                     window.close();
 
                 }
@@ -73,7 +87,7 @@
             });
 
             $("#cancel").click(function () {
-                tinyMCEPopup.close();
+                window.close();
             });
         });
     </script>
@@ -83,7 +97,7 @@
 </head>
 <body>
     <div id='pagediv'>
-        <iframe id="pageframe" width="990" height="680"></iframe>
+        <iframe id="pageframe" width="980" height="600"></iframe>
     </div>
 
     <button id="insert">Insert</button>
