@@ -9,7 +9,7 @@
 
         //Guid of panopto folder to select sessions from. This may be set programatically. If blank,
         //a list of all folders the user has access to will be shown.
-        var panoptoID= ""
+        var folderID= ""
 
         $(document).ready(function () {
 
@@ -19,7 +19,7 @@
             var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
 
-            $('#pageframe').attr('src', servername + "/Panopto/Pages/Sessions/EmbeddedUpload.aspx" + panoptoID);
+            $('#pageframe').attr('src', servername + "/Panopto/Pages/Sessions/EmbeddedUpload.aspx" + folderID);
 
             //Hide insert button initially, until a video is selected
             $("#insert").hide();
