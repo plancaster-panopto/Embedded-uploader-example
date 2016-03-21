@@ -1,0 +1,32 @@
+<html>
+<head>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+   <script>
+   $(document).ready(function(){
+      $('#popup').click(function(event) {
+       event.preventDefault();
+
+       window.open("selector.html", "popupWindow", "width=1000,height=700,scrollbars=yes");
+   });
+});
+   </script>
+</head>
+<body>
+   <button id="popup">Insert Sessions</button>
+   <br/>
+   <h1>Session Ids</h1>
+   <div id="idlist"></div>
+   <br/>
+   <h1>Viewer links</h1>
+   <div id="urllist"></div>
+   <br/>
+   <h1>Embed code</h1>
+   <div id="embedtext"></div>
+
+   <br/>
+   <h1>Embedded Sessions</h1>
+   <div id="embedPreview"></div>
+   <br/>
+
+</body>
+</html>

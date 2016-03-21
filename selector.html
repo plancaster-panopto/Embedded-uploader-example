@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script>
+        //Replace servername (inside quotations) with target panoptoservername
+        var servername = 'https://scratch.beta.panopto.com';
+
+        //Guid of panopto folder to select sessions from. This may be set programatically. If blank,
+        //a list of all folders the user has access to will be shown.
+        var panoptoID= ""
+
+        $(document).ready(function () {
+
+            //Setup for message handling from iframe
+            var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+            var eventEnter = window[eventMethod];
+            var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+            $('#pageframe').attr('src', servername + "/Panopto/Pages/Sessions/EmbeddedUpload.aspx" + panoptoID);
+
+            //Hide insert button initially, until a video is selected
+            $("#insert").hide();
+
+            // Listen to message from child iframe
+            eventEnter(messageEvent, function (e) {
+
+                var message = JSON.parse(e.data);
+
+                //If a video is chosen, show the "Insert" button
+                if (message.cmd === 'ready') {
+                    $("#insert").show();
+                }
+
+                //If no video is chosen, hide the "Insert" button
+                if (message.cmd === 'notReady') {
+                    $("#insert").hide();
+                }
+
+                //Called when "Insert" is clicked. Creates HTML for embedding each selected video into the editor
+                if (message.cmd === 'deliveryList') {
+                        var idString = "IDs: <br/><ul>";
+                        var embedString = "";
+                        var viewersString = "Viewer URLS: <br/><ul>"
+                     //The message will contain a list of the public ids of each selected session.
+                     $.each(message.ids, function (key, value) {
+                        //Add id to list of ids
+                        idString += "<li>" + value + "</li>";
+
+                        //Create an video embed as an object or iframe using the servername and the session's id and append to the string containing the embed tags for all selected sessions.
+                        embedString += "<object data=\"" + servername + "/Panopto/Pages/Embed.aspx?id=" + value + "&v=1\" width=\"450\" height=\"300\" frameborder=\"0\"></object><br>";
+
+                        //Create a viewer url for the session and append to list of session viewer urls.
+                        viewersString += "<li><a href = \"" + servername + "/Panopto/Pages/Viewer.aspx?id=" + value + "\">" + value + "</a></li>";
+                    });
+                    idString += "</ul>";
+                    viewersString += "</ul>";
+                    window.opener.$("#idlist").html(idString);
+                    window.opener.$("#urllist").html(viewersString);
+                    window.opener.$("#embedtext").html("<textarea rows=\"15\" cols=\"30\">" + embedString + "</textarea>");
+                    window.opener.$("#embedPreview").html(embedString);
+                    window.close();
+
+                }
+            }, false);
+
+            $("#insert").click(function () {
+                var win = document.getElementById("pageframe").contentWindow,
+                message = { cmd: "createEmbeddedFrame" };
+                win.postMessage(JSON.stringify(message), servername);
+            });
+
+            $("#cancel").click(function () {
+                tinyMCEPopup.close();
+            });
+        });
+    </script>
+
+    <meta charset="utf-8" />
+    <title>Add Panopto Video</title>
+</head>
+<body>
+    <div id='pagediv'>
+        <iframe id="pageframe" width="990" height="680"></iframe>
+    </div>
+
+    <button id="insert">Insert</button>
+    <button id="cancel">Cancel</button>
+</body>
+</html>
