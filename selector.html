@@ -18,7 +18,7 @@
             var eventEnter = window[eventMethod];
             var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-
+            //Set the address for the frame containing the uploader.
             $('#pageframe').attr('src', servername + "/Panopto/Pages/Sessions/EmbeddedUpload.aspx" + folderID);
 
             //Hide insert button initially, until a video is selected
